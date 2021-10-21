@@ -1,5 +1,5 @@
 use cuentaAhorros
-
+GO
 CREATE PROCEDURE MostrarEstadosCuenta
 	@InNumCuenta int,
 	@OutCodeResult int
@@ -12,7 +12,7 @@ BEGIN
 		
 		BEGIN TRANSACTION T1
 
-			SET @IdNumCuenta = SELECT Id FROM CuentaAhorros WHERE NumCuenta = @InNumCuenta;
+			SET @IdNumCuenta = SELECT Id FROM CuentaAhorros WHERE NumCuenta = @InNumCuenta ORDER BY
 
 			SELECT * FROM EstadoCuenta WHERE IdCuentaAhorros = @IdNumCuenta;
 		
