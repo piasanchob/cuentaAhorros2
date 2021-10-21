@@ -3,7 +3,7 @@ use cuentaAhorros;
 DECLARE @datos XML
 SELECT @datos = CAST(xmlfile AS xml)
 FROM OPENROWSET(BULK 'C:\Users\user\Documents\TEC\BASES1 FRANCO\CA2\XMLFILEV2.xml', SINGLE_BLOB) AS T(xmlfile)
-
+DECLARE @IdMonedaCuenta int,@IdMov int,@IdTipoCA int,@Operacion int,@TCcompra int,@TCVenta int
 --insercion tipo docs identidad
 
 	INSERT INTO dbo.TipoDocsIdentidad(Id, Nombre)
@@ -94,13 +94,13 @@ BEGIN
 
 	--insercion cuentas
 
-	INSERT INTO dbo.CuentaAhorros(IdPersona,FechaCreacion,Saldo,IdTipoCuenta,NumCuenta,ValorDocIdentidad)
+	INSERT INTO dbo.CuentaAhorros(Saldo,IdTipoCuenta,NumCuenta)
 	SELECT  
-		FechaCreacion = T.Item.value('@FechaCreacion', 'date'),
+
+		IdPersona = (SELECT Id FROM Personas WHERE ValorDocIdentidad = T.Item.value('@ValorDocumentoIdentidadDelCliente', 'varchar(64)')),
 		Saldo = T.Item.value('@Saldo', 'float'),
 		IdTipoCuenta = T.Item.value('@TipoCuentaId', 'int'),
-		NumCuenta = T.Item.value('@NumeroCuenta', 'varchar(64)'),
-		ValorDocIdentidad = T.Item.value('@ValorDocumentoIdentidadDelCliente', 'varchar(64)')
+		NumCuenta = T.Item.value('@NumeroCuenta', 'varchar(64)')
 		
 	FROM @datos.nodes('Datos/FechaOperacion/AgregarCuenta') as T(Item)
 	WHERE T.item.value('../@Fecha', 'DATE') = @fechaInicial;
@@ -109,13 +109,13 @@ BEGIN
 
 	--insercion beneficiarios
 
-	INSERT INTO dbo.Beneficiarios(IdParentesco,Porcentaje,NumCuenta,ValorDocIdentidad)
-	SELECT  
+	INSERT INTO dbo.Beneficiarios(IdPersona,IdParentesco,Porcentaje,NumCuenta,ValorDocIdentidad)
+	SELECT 
+		
+		IdPersona = (SELECT Id FROM Personas WHERE ValorDocIdentidad = T.Item.value('@ValorDocumentoIdentidadBeneficiario', 'varchar(64)')),
 		IdParentesco = T.Item.value('@ParentezcoId', 'int'),
 		Porcentaje = T.Item.value('@Porcentaje', 'int'),
-		NumCuenta = T.Item.value('@NumeroCuenta', 'varchar(64)'),
-		ValorDocIdentidad = T.Item.value('@ValorDocumentoIdentidadBeneficiario', 'varchar(64)')
-	
+		NumCuenta = T.Item.value('@NumeroCuenta', 'varchar(64)')
 	
 	FROM @datos.nodes('Datos/FechaOperacion/AgregarBeneficiario') as T(Item)
 	WHERE T.item.value('../@Fecha', 'DATE') = @fechaInicial;
@@ -144,14 +144,47 @@ BEGIN
 		Descripcion = T.Item.value('@Descripcion', 'varchar(64)'),
 		NumCuenta = T.Item.value('@NumeroCuenta', 'int'),
 		IdTipoMov = T.Item.value('@Tipo', 'int'),
+		Monto = T.Item.value('@Monto', 'int'),
 		IdMoneda = T.Item.value('@IdMoneda', 'int')
 
-
 		
-	
 	FROM @datos.nodes('Datos/FechaOperacion/Movimientos') as T(Item)
 	WHERE T.item.value('../@Fecha', 'DATE') = @fechaInicial;
 
+	SET @IdMov = (SELECT Id FROM Movimientos WHERE Descripcion = T.Item.value('@Descripcion', 'varchar(64)'))
+	SET @IdTipoCA = (SELECT IdTipoCuenta FROM CuentaAhorros WHERE IdMovimiento = @IdMov)
+	SET @IdMonedaCuenta = (SELECT IdTipoMoneda FROM TipoCuentaAhorros WHERE Id = @IdTipoCA)
+	SET @Operacion = (SELECT Operacion FROM TipoMovimientos WHERE Id = T.Item.value('@Tipo', 'int'))
+
+
+
+	IF @IdMonedaCuenta = T.Item.value('@IdMoneda', 'int')
+		IF @Operacion = 1
+			
+			UPDATE Movimientos 
+			SET NuevoSaldo = NuevoSaldo + T.Item.value('@Monto', 'int')
+		
+		IF @Operacion = 2
+			
+			UPDATE Movimientos 
+			SET NuevoSaldo = NuevoSaldo - T.Item.value('@Monto', 'int')
+			
+	IF @IdMonedaCuenta != T.Item.value('@IdMoneda', 'int')
+		IF @IdMonedaCuenta = 1
+			--T.Item.value('@IdMoneda', 'int')
+			
+			UPDATE Movimientos 
+			SET NuevoSaldo = NuevoSaldo + T.Item.value('@Monto', 'int')
+		
+		IF @Operacion = 2
+			
+			UPDATE Movimientos 
+			SET NuevoSaldo = NuevoSaldo - T.Item.value('@Monto', 'int')
+			
+
+
+	
+	
 	
 	--..... Procesar movimientos .. idem (incluye modificar saldos y valores en el estado de cuenta). 
 		Para cada movimiento:
