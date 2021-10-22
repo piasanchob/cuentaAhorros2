@@ -2,7 +2,7 @@ use cuentaAhorros;
 
 DECLARE @datos XML
 SELECT @datos = CAST(xmlfile AS xml)
-FROM OPENROWSET(BULK 'C:\Users\user\Documents\TEC\BASES1 FRANCO\CA2\XMLFILEV2.xml', SINGLE_BLOB) AS T(xmlfile)
+FROM OPENROWSET(BULK 'C:\Users\gmora\OneDrive\Desktop\2 SEMESTRE 2021\Bases de Datos\Tarea Programada 2\cuentaAhorros2\DatosTarea.xml', SINGLE_BLOB) AS T(xmlfile)
 DECLARE @IdMonedaCuenta int,@IdMov int,@IdTipoCA int,@Operacion int,@TCcompra int,@TCVenta int
 --insercion tipo docs identidad
 
