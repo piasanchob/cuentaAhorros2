@@ -42,9 +42,7 @@ DECLARE @IdMonedaCuenta int,
 	SELECT * FROM dbo.UsuarioPuedeVer
 	
 --insercion tipo docs identidad
-DECLARE @datos XML
-SELECT @datos = CAST(xmlfile AS xml)
-FROM OPENROWSET(BULK 'C:\Users\user\Documents\TEC\BASES1 FRANCO\CA2\XMLFILEV2.xml', SINGLE_BLOB) AS T(xmlfile)
+
 	INSERT INTO dbo.TipoDocsIdentidad(Id, Nombre)
 	SELECT  
 		Id = T.Item.value('@Id', 'int'),
@@ -150,8 +148,7 @@ BEGIN
 	
 	SELECT  
 
-		IdPersona = (SELECT Id FROM Personas WHERE ValorDocIdentidad = T.Item.value('@ValorDocumentoIdentidadDelCliente', 'varchar(64)'))
-		FROM @datos.nodes('//Datos/FechaOperacion/AgregarCuenta') as T(Item)
+		IdPersona = (SELECT Id FROM Personas WHERE ValorDocIdentidad = T.Item.value('@ValorDocumentoIdentidadDelCliente', 'varchar(64)')),
 		Saldo = T.Item.value('@Saldo', 'float'),
 		IdTipoCuenta = T.Item.value('@TipoCuentaId', 'int'),
 		NumCuenta = T.Item.value('@NumeroCuenta', 'varchar(64)'),
