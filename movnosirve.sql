@@ -2,11 +2,6 @@ use cuentaAhorros;
 
 DECLARE @datos XML
 SELECT @datos = CAST(xmlfile AS xml)
-<<<<<<< HEAD
-FROM OPENROWSET(BULK 'C:\Users\gmora\OneDrive\Desktop\2 SEMESTRE 2021\Bases de Datos\Tarea Programada 2\cuentaAhorros2\DatosTarea.xml', SINGLE_BLOB) AS T(xmlfile)
-DECLARE @IdMonedaCuenta int,@IdMov int,@IdTipoCA int,@Operacion int,@TCcompra int,@TCVenta int
---insercion tipo docs identidad
-=======
 FROM OPENROWSET(BULK 'C:\Users\user\Documents\TEC\BASES1 FRANCO\CA2\XMLFILEV2.xml', SINGLE_BLOB) AS T(xmlfile)
 DECLARE @IdMonedaCuenta int,
 @IdMov int,
@@ -42,15 +37,12 @@ DECLARE @IdMonedaCuenta int,
 		IdUsuario =  (SELECT Id FROM Usuarios WHERE Username = T.Item.value('@Username', 'varchar(64)'))
 		
 	FROM @datos.nodes('Datos/Usuarios_Ver/UsuarioPuedeVer') as T(Item)
->>>>>>> master
 
 	
 	SELECT * FROM dbo.UsuarioPuedeVer
 	
 --insercion tipo docs identidad
-DECLARE @datos XML
-SELECT @datos = CAST(xmlfile AS xml)
-FROM OPENROWSET(BULK 'C:\Users\user\Documents\TEC\BASES1 FRANCO\CA2\XMLFILEV2.xml', SINGLE_BLOB) AS T(xmlfile)
+
 	INSERT INTO dbo.TipoDocsIdentidad(Id, Nombre)
 	SELECT  
 		Id = T.Item.value('@Id', 'int'),
@@ -156,8 +148,7 @@ BEGIN
 	
 	SELECT  
 
-		IdPersona = (SELECT Id FROM Personas WHERE ValorDocIdentidad = T.Item.value('@ValorDocumentoIdentidadDelCliente', 'varchar(64)'))
-		FROM @datos.nodes('//Datos/FechaOperacion/AgregarCuenta') as T(Item)
+		IdPersona = (SELECT Id FROM Personas WHERE ValorDocIdentidad = T.Item.value('@ValorDocumentoIdentidadDelCliente', 'varchar(64)')),
 		Saldo = T.Item.value('@Saldo', 'float'),
 		IdTipoCuenta = T.Item.value('@TipoCuentaId', 'int'),
 		NumCuenta = T.Item.value('@NumeroCuenta', 'varchar(64)'),
