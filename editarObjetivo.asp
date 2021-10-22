@@ -12,8 +12,8 @@ fechaIni =Request.form("fechaIni")
 fechaFin =Request.form("fechaFin")
 cuota =Request.form("cuota")
 objetivo = Request.form("objetivo")
-saldo =Request.form("saldo")
-interes = Request.form("interes")
+descrip =Request.form("descrip")
+
 
 
 
@@ -28,20 +28,21 @@ DIM upd
 SET upd = Server.CreateObject("ADODB.Command")
 SET upd.ActiveConnection = con
 
-'upd.CommandText = "agregarPersona"
-'upd.CommandType = 4  'adCmdStoredProc
+upd.CommandText = "EditarCuentaObjetivo"
+upd.CommandType = 4  'adCmdStoredProc
 
-'upd.Parameters("@ident") = fechaIni
-'upd.Parameters("@Nombre") = fechaFin
-'upd.Parameters("@Fecha") = cuota
-'upd.Parameters("@tel1") = objetivo
-'upd.Parameters("@tel2") = saldo
-'upd.Parameters("@Email") = interes
+upd.Parameters("@InNumCuenta") = numCuenta
+upd.Parameters("@InFechaInicio") = fechaIni
+upd.Parameters("@InFechaFinal") = fechaFin
+upd.Parameters("@InCuota") = cuota
+upd.Parameters("@InObjetivo") = objetivo
+upd.Parameters("@InDescripcion") = descrip
+upd.Parameters("@OutCodeResult") = 5005
 
-'upd.Execute()
+upd.Execute()
 
 
-'Response.Redirect("mensajePersona.asp")
+Response.WRITE("La cuenta fue editada Correctamente")
 
 
 

@@ -52,6 +52,14 @@
       <p align="center"><font color="#FFFFFF" face="Verdana"><input type="text" name="interes" size="20"></font></td>
     </tr>
     <tr>
+    <tr>
+        <td height="22"><font color="#FFFFFF" face="Verdana" size="2">Descripcion</font></td>
+      <td width="148" height="22">
+      <p align="center"><font color="#FFFFFF" face="Verdana"><input type="text" name="descrip" size="20"></font></td>
+    </tr>
+
+    
+    <tr>
       <td width="210" colspan="2" height="30">
       <p align="center"><font face="Verdana" color="#FFFFFF"><input type="submit" value="Agregar" name="edit"><font size="2">&nbsp;</font></td>
     </tr>

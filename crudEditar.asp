@@ -42,15 +42,11 @@
       <td width="148" height="22">
       <p align="center"><font color="#FFFFFF" face="Verdana"><input type="text" name="objetivo" size="20"></font></td>
     </tr>
+    
     <tr>
-        <td height="22"><font color="#FFFFFF" face="Verdana" size="2">Saldo</font></td>
+        <td height="22"><font color="#FFFFFF" face="Verdana" size="2">Descripcion</font></td>
       <td width="148" height="22">
-      <p align="center"><font color="#FFFFFF" face="Verdana"><input type="text" name="saldo" size="20"></font></td>
-    </tr>
-    <tr>
-        <td height="22"><font color="#FFFFFF" face="Verdana" size="2">Interes Acumulado</font></td>
-      <td width="148" height="22">
-      <p align="center"><font color="#FFFFFF" face="Verdana"><input type="text" name="interes" size="20"></font></td>
+      <p align="center"><font color="#FFFFFF" face="Verdana"><input type="text" name="descrip" size="20"></font></td>
     </tr>
     <tr>
       <td width="210" colspan="2" height="30">

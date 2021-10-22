@@ -6,13 +6,6 @@ Dim objetivo
 Dim saldo
 Dim interes
 
-
-fechaIni =Request.form("fechaIni")
-fechaFin =Request.form("fechaFin")
-cuota =Request.form("cuota")
-objetivo = Request.form("objetivo")
-saldo =Request.form("saldo")
-interes = Request.form("interes")
 numCuenta = Request.form("numCuenta")
 
 
@@ -28,20 +21,17 @@ DIM upd
 SET upd = Server.CreateObject("ADODB.Command")
 SET upd.ActiveConnection = con
 
-'upd.CommandText = "agregarPersona"
-'upd.CommandType = 4  'adCmdStoredProc
+upd.CommandText = "EliminarCuentaObjetivo"
+upd.CommandType = 4  'adCmdStoredProc
 
-'upd.Parameters("@ident") = fechaIni
-'upd.Parameters("@Nombre") = fechaFin
-'upd.Parameters("@Fecha") = cuota
-'upd.Parameters("@tel1") = objetivo
-'upd.Parameters("@tel2") = saldo
-'upd.Parameters("@Email") = interes
-
-'upd.Execute()
+upd.Parameters("@InNumCuenta") = numCuenta
+upd.Parameters("@OutCodeResult") = 50005
 
 
-'Response.Redirect("mensajePersona.asp")
+upd.Execute()
+
+
+RESPONSE.WRITE("Se Elimino Correctamente")
 
 
 

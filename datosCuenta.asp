@@ -22,17 +22,17 @@ SET cmd = Server.CreateObject("ADODB.Command")
 SET cmd.ActiveConnection = con
 
 
-'Prepare the stored procedure
-'cmd.CommandText = "numeroCuentas"
-'cmd.CommandType = 4  'adCmdStoredProc
 
-'cmd.Parameters("@Cedula") = ced
+cmd.CommandText = "MostrarEstadosCuenta"
+cmd.CommandType = 4  'adCmdStoredProc
 
+cmd.Parameters("@InNumCuenta") = numCuenta
+cmd.Parameters("@OutCodeResult") = 5005
 
 'Execute the stored procedure
 'This returns recordset but you dont need it
 
-'set rs=cmd.Execute()
+SET rs=cmd.Execute()
 %>
 <center>
 <table>
@@ -41,15 +41,15 @@ SET cmd.ActiveConnection = con
     <th>Datos de la Cuenta</th>
 </tr>
 <%
-    'Do Until rs.EOF
-        'Response.Write("<tr>")
-            'For Each x In rs.Fields
-                'Response.Write("<td>" &x.value & "</td>")
-                'Response.Write("<br>")
-            'Next
-        'Response.Write("</tr>")
-        'rs.movenext
-    'Loop
+    Do Until rs.EOF
+        Response.Write("<tr>")
+            For Each x In rs.Fields
+                Response.Write("<td>" &x.value & "</td>")
+                Response.Write("<br>")
+            Next
+        Response.Write("</tr>")
+        rs.movenext
+    Loop
 %>
 
 </table>
