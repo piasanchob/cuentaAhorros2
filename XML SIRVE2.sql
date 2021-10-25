@@ -2,7 +2,7 @@ use cuentaAhorros;
 
 DECLARE @datos XML
 SELECT @datos = CAST(xmlfile AS xml)
-FROM OPENROWSET(BULK 'C:\Users\gmora\OneDrive\Desktop\2 SEMESTRE 2021\Bases de Datos\Tarea Programada 2\cuentaAhorros2\DatosTarea2-6.xml', SINGLE_BLOB) AS T(xmlfile)
+FROM OPENROWSET(BULK 'C:\Users\gmora\OneDrive\Desktop\Prueba.xml', SINGLE_BLOB) AS T(xmlfile)
 DECLARE @IdMonedaCuenta int,@IdMov int,@IdTipoCA int,@Operacion int,@TCcompra int,@TCVenta int, @IdMon INT;
 
 DECLARE @idTipoCambio INT, @venta INT, @compra INT, @idMapeo INT, @var INT, @Monto INT, @IdCuenta INT,
@@ -75,8 +75,9 @@ DECLARE @CuentasCierran TABLE( sec int identity(1,1), Id Int)
 
 SELECT @fechaInicial=MIN(Fecha), @fechaFinal=MAX(Fecha) FROM @FechasProcesar
 
-
---WHILE @fechaInicial<=@fechaFinal
+--SET @fechaFinal  = '12-31-2020'
+--SET @fechaInicial  = '08-01-2020';
+WHILE @fechaInicial<=@fechaFinal
 BEGIN
 	
 	--insercion Personas
@@ -130,18 +131,6 @@ BEGIN
 
 	--insercion tipo cambio
 
-	INSERT INTO dbo.TipoCambio(TCCompra,TCVenta)
-	SELECT  
-		TCCompra = T.Item.value('@Compra', 'int'),
-		TCVenta = T.Item.value('@Venta', 'int')
-		
-	
-	FROM @datos.nodes('Datos/FechaOperacion/TipoCambioDolares') as T(Item)
-	WHERE T.item.value('../@Fecha', 'DATE') = @fechaInicial;
-
-	SELECT * FROM dbo.TipoCambio
-
-	--insercion mov
 
 	INSERT INTO dbo.Movimientos(Descripcion,IdCuenta,IdTipoMov,Monto,IdMoneda)
 	SELECT  
@@ -157,7 +146,41 @@ BEGIN
 
 	SELECT * FROM dbo.Movimientos;
 
---END;
+
+	INSERT INTO dbo.TipoCambio(TCCompra,TCVenta)
+	SELECT  
+		TCCompra = T.Item.value('@Compra', 'int'),
+		TCVenta = T.Item.value('@Venta', 'int')
+		
+	
+	FROM @datos.nodes('Datos/FechaOperacion/TipoCambioDolares') as T(Item)
+	WHERE T.item.value('../@Fecha', 'DATE') = @fechaInicial;
+
+	SELECT * FROM dbo.TipoCambio
+
+	--insercion mov
+
+	INSERT INTO dbo.TipoMov(Id,Operacion,Descripcion)
+	SELECT  
+		
+		Id = T.Item.value('@Id', 'int'),
+		
+		Operacion = T.Item.value('@Operacion', 'varchar(64)'),
+		Descripcion = T.Item.value('@Descripcion', 'varchar(64)')
+		
+		
+	FROM @datos.nodes('//Datos/FechaOperacion/TipoMovimientos') as T(Item)
+
+	SELECT * FROM TipoMov
+
+
+	
+
+
+	SET @fechaInicial = (SELECT(DATEADD(DAY,1,@fechaInicial)))
+
+
+END;
 	SET @IdMov = (SELECT Id FROM CuentaAhorros WHERE NumCuenta=  T.Item.value('@NumeroCuenta', 'int'))
 	SET @IdCuenta= (SELECT IdCuenta From Movimientos WHERE   Id=@IdMov)
 
@@ -237,6 +260,6 @@ BEGIN
 	WHERE @var=Id;
 
 
-
+	
 
 END;
