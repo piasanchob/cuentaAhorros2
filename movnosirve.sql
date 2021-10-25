@@ -2,6 +2,7 @@ use cuentaAhorros;
 
 DECLARE @datos XML
 SELECT @datos = CAST(xmlfile AS xml)
+<<<<<<< HEAD
 FROM OPENROWSET(BULK 'C:\Users\user\Documents\TEC\BASES1 FRANCO\CA2\XMLFILEV7.xml', SINGLE_BLOB) AS T(xmlfile)
 DECLARE @IdMonedaCuenta int,
 @IdMov int,
@@ -10,6 +11,13 @@ DECLARE @IdMonedaCuenta int,
 @TCcompra int,
 @TCVenta int,
 @IdPersona int
+=======
+FROM OPENROWSET(BULK 'C:\Users\gmora\OneDrive\Desktop\2 SEMESTRE 2021\Bases de Datos\Tarea Programada 2\cuentaAhorros2\DatosTarea2-6.xml', SINGLE_BLOB) AS T(xmlfile)
+DECLARE @IdMonedaCuenta int,@IdMov int,@IdTipoCA int,@Operacion int,@TCcompra int,@TCVenta int, @IdMon INT;
+
+DECLARE @idTipoCambio INT, @venta INT, @compra INT, @idMapeo INT, @var INT, @Monto INT, @IdCuenta INT,
+@nuevoSaldo INT, @IdMov2 INT;
+>>>>>>> master
 
 --insercion usuarios
 
@@ -212,11 +220,9 @@ BEGIN
 
 	SELECT * FROM dbo.Movimientos
 
-
 SET @fechaInicial = (SELECT(DATEADD(DAY,1,@fechaInicial)))
-	
-
 END;
+<<<<<<< HEAD
 	
 	
 	SELECT IdCuenta FROM CuentaAhorros WHERE IdCuenta = 
@@ -227,9 +233,91 @@ END;
 	SET @IdMonedaCuenta = (SELECT IdTipoMoneda FROM TipoCuentaAhorros WHERE Id = @IdTipoCA)
 	SET @IdTipoMov = SELECT Id FROM
 	SET @Operacion = (SELECT Operacion FROM TipoMovimientos)
+=======
+
+--referencia
+	SET @IdMov = (SELECT Id FROM CuentaAhorros WHERE NumCuenta=  T.Item.value('@NumeroCuenta', 'int'))
+	SET @IdCuenta= (SELECT IdCuenta From Movimientos WHERE   Id=@IdMov)
+
+
+	SET @IdTipoCA = (SELECT IdTipoCuenta FROM CuentaAhorros WHERE Id = @IdCuenta)
+
+	SET @IdMonedaCuenta = (SELECT IdTipoMoneda FROM TiposCuentaAhorros WHERE Id = @IdTipoCA)
+
+	SET @Operacion = (SELECT Operacion FROM TipoMov)
+
 	
+	SET @idTipoCambio= (SELECT idTipoCambio from Movimientos)
 
 
+	SET @Monto = (SELECT Monto FROM Movimientos)
+	SET @IdMon = (SELECT idMoneda FROM Movimientos)
+	SET @var= (SELECT Id from Movimientos WHERE @idTipoCambio = idTipoCambio)
+
+	IF @IdMonedaCuenta = @IdMon
+
+					
+		IF @Operacion = 1
+			
+			UPDATE Movimientos 
+			SET NuevoSaldo = NuevoSaldo +@Monto
+			WHERE @var=Id;
+
+		--referencia2
+		IF @Operacion = 2
+			
+			UPDATE Movimientos 
+			SET NuevoSaldo = NuevoSaldo - @Monto
+			WHERE @var=Id;
+			
+	IF (@IdMonedaCuenta = 1 AND @IdMon=2)
+		IF @Operacion = 1
+			
+			Set @idTipoCambio = (SELECT idTipoCambio FROM Movimientos WHERE @IdMov=id)
+			Set @compra = (SELECT TCVenta FROM TipoCambio WHERE @idTipoCambio=id)
+			UPDATE Movimientos 
+			SET NuevoSaldo = NuevoSaldo + (@Monto/@compra)
+			WHERE @var=Id;
+		
+		IF @Operacion = 2
+			
+			Set @idTipoCambio = (SELECT idTipoCambio FROM Movimientos WHERE @IdMov=id)
+			Set @compra = (SELECT TCVenta FROM TipoCambio WHERE @idTipoCambio=id)
+			UPDATE Movimientos 
+			SET NuevoSaldo = NuevoSaldo - (@Monto/@compra)
+			WHERE @var=Id;
+
+	IF (@IdMonedaCuenta = 2 AND @IdMon=1)
+		IF @Operacion = 1
+			
+			Set @idTipoCambio = (SELECT idTipoCambio FROM Movimientos WHERE @IdMov=id)
+			Set @venta = (SELECT TCVenta FROM TipoCambio WHERE @idTipoCambio=id)
+			UPDATE Movimientos 
+			SET NuevoSaldo = NuevoSaldo +( @Monto*@venta)
+			WHERE @var=Id;
+		
+		IF @Operacion = 2
+			
+			Set @idTipoCambio = (SELECT idTipoCambio FROM Movimientos WHERE @IdMov=id)
+			Set @venta = (SELECT TCVenta FROM TipoCambio WHERE @idTipoCambio=id)
+			UPDATE Movimientos 
+			SET NuevoSaldo = NuevoSaldo -  (@Monto*@venta)
+			WHERE @var=Id;
+
+>>>>>>> master
+	
+	SET @IdMov2= (SELECT IdCuenta FROM Movimientos WHERE IdTipoCambio=@idTipoCambio);
+	SET @var = (SELECT Id FROM CuentaAhorros WHERE Id=@IdMov2 );
+
+	SET @nuevoSaldo = (SELECT NuevoSaldo FROM Movimientos WHERE Id=@IdMov2);
+
+	UPDATE CuentaAhorros
+	SET Saldo = @nuevoSaldo
+	WHERE @var=Id;
+			
+
+
+<<<<<<< HEAD
 	IF @IdMonedaCuenta = 'moneda mov '
 		IF @Operacion = 1
 			
@@ -253,7 +341,11 @@ END;
 			UPDATE Movimientos 
 			SET NuevoSaldo = NuevoSaldo - T.Item.value('@Monto', 'int')
 			
+=======
+>>>>>>> master
 
+SET @fechaInicial = (SELECT(DATEADD(DAY,1,@fechaInicial)))
+END;
 
 	SELECT IdTipoCuenta FROM CuentaAhorros WHERE Id = 'variable de todas las ids'
 	SELECT Id FROM TipoCuentaAhorros WHERE Id = 'var d arribba'
