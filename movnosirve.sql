@@ -2,7 +2,7 @@ use cuentaAhorros;
 
 DECLARE @datos XML
 SELECT @datos = CAST(xmlfile AS xml)
-FROM OPENROWSET(BULK 'C:\Users\user\Documents\TEC\BASES1 FRANCO\CA2\XMLFILEV2.xml', SINGLE_BLOB) AS T(xmlfile)
+FROM OPENROWSET(BULK 'C:\Users\user\Documents\TEC\BASES1 FRANCO\CA2\XMLFILEV7.xml', SINGLE_BLOB) AS T(xmlfile)
 DECLARE @IdMonedaCuenta int,
 @IdMov int,
 @IdTipoCA int,
@@ -217,15 +217,20 @@ SET @fechaInicial = (SELECT(DATEADD(DAY,1,@fechaInicial)))
 	
 
 END;
-
-	SET @IdMov = (SELECT Id FROM Movimientos WHERE Descripcion = T.Item.value('@Descripcion', 'varchar(64)'))
+	
+	
+	SELECT IdCuenta FROM CuentaAhorros WHERE IdCuenta = 
+	@IdCuenta =
+	SET @IdCA = (SELECT Id FROM CuentaAhorros WHERE Id = IdCuenta)
+	SELECT * FROM 
 	SET @IdTipoCA = (SELECT IdTipoCuenta FROM CuentaAhorros WHERE IdMovimiento = @IdMov)
 	SET @IdMonedaCuenta = (SELECT IdTipoMoneda FROM TipoCuentaAhorros WHERE Id = @IdTipoCA)
-	SET @Operacion = (SELECT Operacion FROM TipoMovimientos WHERE Id = T.Item.value('@Tipo', 'int'))
+	SET @IdTipoMov = SELECT Id FROM
+	SET @Operacion = (SELECT Operacion FROM TipoMovimientos)
 	
 
 
-	IF @IdMonedaCuenta = T.Item.value('@IdMoneda', 'int')
+	IF @IdMonedaCuenta = 'moneda mov '
 		IF @Operacion = 1
 			
 			UPDATE Movimientos 
@@ -250,9 +255,22 @@ END;
 			
 
 
-	
-	
-	
+	SELECT IdTipoCuenta FROM CuentaAhorros WHERE Id = 'variable de todas las ids'
+	SELECT Id FROM TipoCuentaAhorros WHERE Id = 'var d arribba'
+	SET @SaldoCuenta = (SELECT Saldo FROM CuentaAhorros WHERE 'variable interfaz' = NumCuenta)
+	SET @IdCuentaAhorros = (SELECT Id FROM CuentaAhorros WHERE 'variable interfaz' = NumCuenta)
+	SET @IdTipoCA = (SELECT IdTipoCuenta FROM CuentaAhorros WHERE 'variable interfaz' = NumCuenta)
+	SET @NumRetirosHum = (SELECT NumRetirosHumano FROM TipoCuentaAhorros WHERE Id = @IdTipoCA)
+	SET @NumRetirosAuto = (SELECT NumRetirosAutomatico FROM TipoCuentaAhorros WHERE Id = @IdTipoCA)
+	UPDATE EstadoCuenta
+	SET SaldoInicial = @SaldoCuenta
+	WHERE IdCuentaAhorros =@IdCuentaAhorros
+	UPDATE EstadoCuenta
+	SET NumRetirosHumano = @NumRetirosHum
+	WHERE IdCuentaAhorros = @IdCuentaAhorros
+	UPDATE EstadoCuenta
+	SET NumRetirosAutomatico = @NumRetirosAuto
+	WHERE IdCuentaAhorros = @IdCuentaAhorros
 	--..... Procesar movimientos .. idem (incluye modificar saldos y valores en el estado de cuenta). 
 		Para cada movimiento:
 	
