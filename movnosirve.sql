@@ -6,8 +6,10 @@ FROM OPENROWSET(BULK 'C:\Users\gmora\OneDrive\Desktop\2 SEMESTRE 2021\Bases de D
 DECLARE @IdMonedaCuenta int,@IdMov int,@IdTipoCA int,@Operacion int,@TCcompra int,@TCVenta int, @IdMon INT;
 
 DECLARE @idTipoCambio INT, @venta INT, @compra INT, @idMapeo INT, @var INT, @Monto INT, @IdCuenta INT,
-@nuevoSaldo INT, @IdMov2 INT;
+@nuevoSaldo INT, @IdMov2 INT, @cont INT;
 
+
+SET @cont=1;
 --insercion usuarios
 
 
@@ -209,11 +211,13 @@ BEGIN
 
 	SELECT * FROM dbo.Movimientos
 
-SET @fechaInicial = (SELECT(DATEADD(DAY,1,@fechaInicial)))
-END;
+
 
 --referencia
-	SET @IdMov = (SELECT Id FROM CuentaAhorros WHERE NumCuenta=  T.Item.value('@NumeroCuenta', 'int'))
+	
+
+WHILE @cont<= 24
+	SET @IdMov = (SELECT Id FROM CuentaAhorros WHERE NumCuenta=  @cont)
 	SET @IdCuenta= (SELECT IdCuenta From Movimientos WHERE   Id=@IdMov)
 
 
@@ -290,8 +294,10 @@ END;
 	UPDATE CuentaAhorros
 	SET Saldo = @nuevoSaldo
 	WHERE @var=Id;
-			
 
+
+SET @cont=@cont+1;
+			
 
 
 SET @fechaInicial = (SELECT(DATEADD(DAY,1,@fechaInicial)))
