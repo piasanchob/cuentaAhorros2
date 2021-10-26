@@ -15,10 +15,17 @@ DECLARE @IdMonedaCuenta int,
 FROM OPENROWSET(BULK 'C:\Users\gmora\OneDrive\Desktop\2 SEMESTRE 2021\Bases de Datos\Tarea Programada 2\cuentaAhorros2\DatosTarea2-6.xml', SINGLE_BLOB) AS T(xmlfile)
 DECLARE @IdMonedaCuenta int,@IdMov int,@IdTipoCA int,@Operacion int,@TCcompra int,@TCVenta int, @IdMon INT;
 
+<<<<<<< HEAD
 DECLARE @idTipoCambio INT, @venta INT, @compra INT, @idMapeo INT, @var INT, @Monto INT, @IdCuenta INT,
 @nuevoSaldo INT, @IdMov2 INT;
 >>>>>>> master
+=======
+DECLARE @idTipoCambio INT, @venta INT, @compra INT, @idMapeo INT, @var INT, @Monto INT, @IdCuenta INT,
+@nuevoSaldo INT, @IdMov2 INT, @cont INT;
+>>>>>>> master
 
+
+SET @cont=1;
 --insercion usuarios
 
 
@@ -220,6 +227,7 @@ BEGIN
 
 	SELECT * FROM dbo.Movimientos
 
+<<<<<<< HEAD
 SET @fechaInicial = (SELECT(DATEADD(DAY,1,@fechaInicial)))
 END;
 <<<<<<< HEAD
@@ -237,6 +245,15 @@ END;
 
 --referencia
 	SET @IdMov = (SELECT Id FROM CuentaAhorros WHERE NumCuenta=  T.Item.value('@NumeroCuenta', 'int'))
+=======
+
+
+--referencia
+	
+
+WHILE @cont<= 24
+	SET @IdMov = (SELECT Id FROM CuentaAhorros WHERE NumCuenta=  @cont)
+>>>>>>> master
 	SET @IdCuenta= (SELECT IdCuenta From Movimientos WHERE   Id=@IdMov)
 
 
@@ -314,9 +331,9 @@ END;
 	UPDATE CuentaAhorros
 	SET Saldo = @nuevoSaldo
 	WHERE @var=Id;
-			
 
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 	IF @IdMonedaCuenta = 'moneda mov '
 		IF @Operacion = 1
@@ -342,6 +359,11 @@ END;
 			SET NuevoSaldo = NuevoSaldo - T.Item.value('@Monto', 'int')
 			
 =======
+>>>>>>> master
+=======
+SET @cont=@cont+1;
+			
+
 >>>>>>> master
 
 SET @fechaInicial = (SELECT(DATEADD(DAY,1,@fechaInicial)))
