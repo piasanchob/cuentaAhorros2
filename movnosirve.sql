@@ -2,11 +2,27 @@ use cuentaAhorros;
 
 DECLARE @datos XML
 SELECT @datos = CAST(xmlfile AS xml)
+<<<<<<< HEAD
+FROM OPENROWSET(BULK 'C:\Users\user\Documents\TEC\BASES1 FRANCO\CA2\XMLFILEV7.xml', SINGLE_BLOB) AS T(xmlfile)
+DECLARE @IdMonedaCuenta int,
+@IdMov int,
+@IdTipoCA int,
+@Operacion int,
+@TCcompra int,
+@TCVenta int,
+@IdPersona int
+=======
 FROM OPENROWSET(BULK 'C:\Users\gmora\OneDrive\Desktop\2 SEMESTRE 2021\Bases de Datos\Tarea Programada 2\cuentaAhorros2\DatosTarea2-6.xml', SINGLE_BLOB) AS T(xmlfile)
 DECLARE @IdMonedaCuenta int,@IdMov int,@IdTipoCA int,@Operacion int,@TCcompra int,@TCVenta int, @IdMon INT;
 
+<<<<<<< HEAD
+DECLARE @idTipoCambio INT, @venta INT, @compra INT, @idMapeo INT, @var INT, @Monto INT, @IdCuenta INT,
+@nuevoSaldo INT, @IdMov2 INT;
+>>>>>>> master
+=======
 DECLARE @idTipoCambio INT, @venta INT, @compra INT, @idMapeo INT, @var INT, @Monto INT, @IdCuenta INT,
 @nuevoSaldo INT, @IdMov2 INT, @cont INT;
+>>>>>>> master
 
 
 SET @cont=1;
@@ -211,6 +227,25 @@ BEGIN
 
 	SELECT * FROM dbo.Movimientos
 
+<<<<<<< HEAD
+SET @fechaInicial = (SELECT(DATEADD(DAY,1,@fechaInicial)))
+END;
+<<<<<<< HEAD
+	
+	
+	SELECT IdCuenta FROM CuentaAhorros WHERE IdCuenta = 
+	@IdCuenta =
+	SET @IdCA = (SELECT Id FROM CuentaAhorros WHERE Id = IdCuenta)
+	SELECT * FROM 
+	SET @IdTipoCA = (SELECT IdTipoCuenta FROM CuentaAhorros WHERE IdMovimiento = @IdMov)
+	SET @IdMonedaCuenta = (SELECT IdTipoMoneda FROM TipoCuentaAhorros WHERE Id = @IdTipoCA)
+	SET @IdTipoMov = SELECT Id FROM
+	SET @Operacion = (SELECT Operacion FROM TipoMovimientos)
+=======
+
+--referencia
+	SET @IdMov = (SELECT Id FROM CuentaAhorros WHERE NumCuenta=  T.Item.value('@NumeroCuenta', 'int'))
+=======
 
 
 --referencia
@@ -218,6 +253,7 @@ BEGIN
 
 WHILE @cont<= 24
 	SET @IdMov = (SELECT Id FROM CuentaAhorros WHERE NumCuenta=  @cont)
+>>>>>>> master
 	SET @IdCuenta= (SELECT IdCuenta From Movimientos WHERE   Id=@IdMov)
 
 
@@ -285,6 +321,7 @@ WHILE @cont<= 24
 			SET NuevoSaldo = NuevoSaldo -  (@Monto*@venta)
 			WHERE @var=Id;
 
+>>>>>>> master
 	
 	SET @IdMov2= (SELECT IdCuenta FROM Movimientos WHERE IdTipoCambio=@idTipoCambio);
 	SET @var = (SELECT Id FROM CuentaAhorros WHERE Id=@IdMov2 );
@@ -296,16 +333,58 @@ WHILE @cont<= 24
 	WHERE @var=Id;
 
 
+<<<<<<< HEAD
+<<<<<<< HEAD
+	IF @IdMonedaCuenta = 'moneda mov '
+		IF @Operacion = 1
+			
+			UPDATE Movimientos 
+			SET NuevoSaldo = NuevoSaldo + T.Item.value('@Monto', 'int')
+		
+		IF @Operacion = 2
+			
+			UPDATE Movimientos 
+			SET NuevoSaldo = NuevoSaldo - T.Item.value('@Monto', 'int')
+			
+	IF @IdMonedaCuenta != T.Item.value('@IdMoneda', 'int')
+		IF @IdMonedaCuenta = 1
+			--T.Item.value('@IdMoneda', 'int')
+			
+			UPDATE Movimientos 
+			SET NuevoSaldo = NuevoSaldo + T.Item.value('@Monto', 'int')
+		
+		IF @Operacion = 2
+			
+			UPDATE Movimientos 
+			SET NuevoSaldo = NuevoSaldo - T.Item.value('@Monto', 'int')
+			
+=======
+>>>>>>> master
+=======
 SET @cont=@cont+1;
 			
 
+>>>>>>> master
 
 SET @fechaInicial = (SELECT(DATEADD(DAY,1,@fechaInicial)))
 END;
 
-	
-	
-	
+	SELECT IdTipoCuenta FROM CuentaAhorros WHERE Id = 'variable de todas las ids'
+	SELECT Id FROM TipoCuentaAhorros WHERE Id = 'var d arribba'
+	SET @SaldoCuenta = (SELECT Saldo FROM CuentaAhorros WHERE 'variable interfaz' = NumCuenta)
+	SET @IdCuentaAhorros = (SELECT Id FROM CuentaAhorros WHERE 'variable interfaz' = NumCuenta)
+	SET @IdTipoCA = (SELECT IdTipoCuenta FROM CuentaAhorros WHERE 'variable interfaz' = NumCuenta)
+	SET @NumRetirosHum = (SELECT NumRetirosHumano FROM TipoCuentaAhorros WHERE Id = @IdTipoCA)
+	SET @NumRetirosAuto = (SELECT NumRetirosAutomatico FROM TipoCuentaAhorros WHERE Id = @IdTipoCA)
+	UPDATE EstadoCuenta
+	SET SaldoInicial = @SaldoCuenta
+	WHERE IdCuentaAhorros =@IdCuentaAhorros
+	UPDATE EstadoCuenta
+	SET NumRetirosHumano = @NumRetirosHum
+	WHERE IdCuentaAhorros = @IdCuentaAhorros
+	UPDATE EstadoCuenta
+	SET NumRetirosAutomatico = @NumRetirosAuto
+	WHERE IdCuentaAhorros = @IdCuentaAhorros
 	--..... Procesar movimientos .. idem (incluye modificar saldos y valores en el estado de cuenta). 
 		Para cada movimiento:
 	
