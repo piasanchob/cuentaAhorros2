@@ -9,7 +9,7 @@ DECLARE @cont INT=1, @IdCuentaAhorros INT, @IdEstadoCuenta INT, @IdTipoCuentaAho
 @SaldoMin INT, @Saldo INT,@MultaSaldoMin INT, @SaldoFinal INT,@NumRetirosHumano INT,
 @NumRetirosAutomatico INT, @ComisionRetiroHumano INT, @ComisionRetiroAutomatico INT,
 @diferenciaRetirosHumano INT, @diferenciaRetirosATM INT, @ContRetiroAtm INT, 
-@ContRetiroHumano INT, @TasaInteres INT, @Suma INT, @CargoMensual INT
+@ContRetiroHumano INT, @TasaInteres INT, @Suma INT, @CargoMensual INT, @FechaInicial DATE
 
 WHILE @cont<25
 	BEGIN
@@ -17,7 +17,9 @@ WHILE @cont<25
 
 	SET @IdCuentaAhorros = (SELECT Id FROM CuentaAhorros WHERE Id= @cont)
 	-- SET IDCUENTA AHORRO DE LA TABLA ESTADO DE CUENTA 
-	SET @IdEstadoCuenta = (SELECT Id FROM EstadoCuenta WHERE Id=@IdCuentaAhorros)
+	SET @IdEstadoCuenta = (SELECT Id FROM EstadoCuenta WHERE IdCuentaAhorros=@IdCuentaAhorros)
+
+	 SET @FechaInicial = (SELECT FechaInicio FROM EstadoCuenta WHERE IdCuentaAhorros=@IdCuentaAhorros)
 
 	SET @IdTipoCuentaAhorro =(SELECT IdTipoCuenta FROM cuentaAhorros WHERE Id=@IdCuentaAhorros)
 	-- SET INTERES
@@ -94,10 +96,13 @@ WHILE @cont<25
 
 	SET @SaldoFinal = @Saldo - @CargoMensual
 
+	SET @FechaInicial= (SELECT(DATEADD(month,1,@fechaInicial)))
+
 
 	UPDATE EstadoCuenta
-	SET SaldoFinal=@SaldoFinal
+	SET SaldoFinal=@SaldoFinal, FechaFinal= @FechaInicial
 	WHERE Id=@IdEstadoCuenta
 SET @cont+=1
 
 END;
+EXEC EstadosDeCuenta 5
