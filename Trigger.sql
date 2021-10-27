@@ -1,0 +1,19 @@
+CREATE TRIGGER insercion ON CuentaAhorros AFTER INSERT
+AS
+	BEGIN 
+	BEGIN TRY
+	SET NOCOUNT ON
+		DECLARE @OutCodeResult int;
+		BEGIN TRANSACTION T1
+			INSERT INTO EstadoCuenta(IdCuentaAhorros,FechaInicio,FechaFinal,SaldoInicial,SaldoFinal,CantOpATM,CantOpHumano)
+
+			SELECT i.Id,i.FechaCreacion,NULL,0,0,0,0 FROM INSERTED i;
+			COMMIT TRANSACTION T1
+	END TRY
+	BEGIN CATCH	
+		IF @@TRANCOUNT>0
+				ROLLBACK TRANSACTION T1;
+				SET @OutCodeResult = 50005;
+	END CATCH
+	SET NOCOUNT OFF
+END;

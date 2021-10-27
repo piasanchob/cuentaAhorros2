@@ -215,5 +215,8 @@ SET @fechaInicial = (SELECT(DATEADD(DAY,1,@fechaInicial)))
 
 END;
 
-DELETE FROM dbo.TipoCambio WHERE Id >121
-SELECT COUNT(*) FROM Movimientos
+--DELETE FROM Personas WHERE Id >42
+--DELETE FROM TipoCambio WHERE Id >121
+--UPDATE Movimientos 
+--SET NuevoSaldo = 0,
+-- MontoMonedaCuenta =0
