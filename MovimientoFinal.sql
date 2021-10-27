@@ -1,9 +1,11 @@
+CREATE PROCEDURE UpdateMontoMonedaCuenta
+AS
 
-		DECLARE @IdCuentaAhorro INT, 
-		@IdMov INT,@IdMonMov INT, @IdMonedaCuenta INT, @IdTipoCuenta INT, 
-		@Venta INT, @Compra Int, @cont INT =1, @Operacion INT, @Monto INT , 
-		@nuevoSaldo INT,@IdTipoCambio INT, @IdTipoMov INT, @Val INT, 
-		@IdNumCuenta INT, @MontoMonedaCuenta INT;
+DECLARE @IdCuentaAhorro INT, 
+@IdMov INT,@IdMonMov INT, @IdMonedaCuenta INT, @IdTipoCuenta INT, 
+@Venta INT, @Compra Int, @cont INT =1, @Operacion INT, @Monto INT , 
+@nuevoSaldo INT,@IdTipoCambio INT, @IdTipoMov INT, @Val INT, 
+@IdNumCuenta INT, @MontoMonedaCuenta INT;
 
 
 
