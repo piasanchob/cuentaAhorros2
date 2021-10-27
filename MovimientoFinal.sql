@@ -50,8 +50,8 @@ BEGIN
 	IF (@IdMonedaCuenta= 1 AND @IdMonMov=1)			
 		IF @Operacion = 1
 
-			SET @MontoMonedaCuenta=@Monto 
-
+			SET @MontoMonedaCuenta=(@Monto) 
+			
 			
 			
 		ELSE
@@ -62,12 +62,14 @@ BEGIN
 		
 		IF @Operacion = 1
 		
-			SET @MontoMonedaCuenta = (@Compra * @Monto) 
+			SET @MontoMonedaCuenta = (@Compra * @Monto)
+			
 			
 		ELSE
 			
 			
-			SET @MontoMonedaCuenta = (@Compra * -@Monto) 
+			SET @MontoMonedaCuenta = (@Compra * -@Monto)
+			
 			
 
 	ELSE IF (@IdMonedaCuenta = 2 AND @IdMonMov=1)
@@ -76,22 +78,23 @@ BEGIN
 			
 			
 			SET @MontoMonedaCuenta = (@Monto /@Venta) 
+
 		
 		
 		ELSE
 			
 			SET @MontoMonedaCuenta = (@Monto / -@Venta)
 			
+			
 	ELSE IF (@IdMonedaCuenta= 2 AND @IdMonMov	=2 )
 		IF @Operacion = 1
 
 			SET @MontoMonedaCuenta=@Monto 
 
-			
 		ELSE
 			
 			SET @MontoMonedaCuenta= -@Monto 
-		
+			
 
 			
 	
@@ -100,7 +103,7 @@ BEGIN
 
 	UPDATE Movimientos
 	SET MontoMonedaCuenta = @MontoMonedaCuenta
-	WHERE Id=@IdMov;
+	WHERE Id=@IdMov
 
 
 	SET @cont= @cont+1;
