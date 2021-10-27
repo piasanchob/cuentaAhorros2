@@ -1,6 +1,6 @@
 DECLARE @datos XML
 SELECT @datos = CAST(xmlfile AS xml)
-FROM OPENROWSET(BULK 'C:\Users\gmora\OneDrive\Desktop\2 SEMESTRE 2021\Bases de Datos\Tarea Programada 2\cuentaAhorros2\DatosTarea2-7.xml', SINGLE_BLOB) AS T(xmlfile)
+FROM OPENROWSET(BULK 'C:\Users\gmora\OneDrive\Desktop\2 SEMESTRE 2021\Bases de Datos\Tarea Programada 2\cuentaAhorros2\DatosTarea2-8.xml', SINGLE_BLOB) AS T(xmlfile)
 
 --insercion usuarios
 
@@ -64,14 +64,14 @@ FROM OPENROWSET(BULK 'C:\Users\gmora\OneDrive\Desktop\2 SEMESTRE 2021\Bases de D
 	SELECT * FROM dbo.Parentescos
 	--insercion tipo cuentas de ahorro
 
-	INSERT INTO dbo.TiposCuentaAhorros(Id, Nombre,IdTipoMoneda,SaldoMin,MultaSaldoMin,CargoAnual,NumRetirosHumano,NumRetirosAutomatico,ComisionHumano,ComisionCajero,TasaInteres)
+	INSERT INTO dbo.TiposCuentaAhorros(Id, Nombre,IdTipoMoneda,SaldoMin,MultaSaldoMin,CargoMensual,NumRetirosHumano,NumRetirosAutomatico,ComisionHumano,ComisionCajero,TasaInteres)
 	SELECT  
 		Id = T.Item.value('@Id', 'int'),
 		Nombre = T.Item.value('@Nombre', 'varchar(64)'),
 		IdTipoMoneda = T.Item.value('@IdTipoMoneda', 'int'),
 		SaldoMin = T.Item.value('@SaldoMinimo', 'float'),
 		MultaSaldoMin = T.Item.value('@MultaSaldoMin', 'float'),
-		CargoAnual = T.Item.value('@CargoAnual', 'int'),
+		CargoMensual = T.Item.value('@CargoMensual', 'int'),
 		NumRetirosHumano = T.Item.value('@NumRetirosHumano', 'int'),
 		NumRetirosAutomatico = T.Item.value('@NumRetirosAutomatico', 'int'),
 		ComisionHumano = T.Item.value('@ComisionHumano', 'int'),
