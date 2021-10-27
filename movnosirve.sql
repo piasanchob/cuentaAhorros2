@@ -2,30 +2,17 @@ use cuentaAhorros;
 
 DECLARE @datos XML
 SELECT @datos = CAST(xmlfile AS xml)
-<<<<<<< HEAD
-FROM OPENROWSET(BULK 'C:\Users\user\Documents\TEC\BASES1 FRANCO\CA2\XMLFILEV7.xml', SINGLE_BLOB) AS T(xmlfile)
+FROM OPENROWSET(BULK 'C:\Users\user\Documents\TEC\BASES1 FRANCO\CA2\XMLFILE7.xml', SINGLE_BLOB) AS T(xmlfile)
 DECLARE @IdMonedaCuenta int,
 @IdMov int,
 @IdTipoCA int,
 @Operacion int,
 @TCcompra int,
 @TCVenta int,
-@IdPersona int
-=======
-FROM OPENROWSET(BULK 'C:\Users\gmora\OneDrive\Desktop\2 SEMESTRE 2021\Bases de Datos\Tarea Programada 2\cuentaAhorros2\DatosTarea2-6.xml', SINGLE_BLOB) AS T(xmlfile)
-DECLARE @IdMonedaCuenta int,@IdMov int,@IdTipoCA int,@Operacion int,@TCcompra int,@TCVenta int, @IdMon INT;
+@IdPersona int,
+@cont int = 1,
+@IdCuenta int;
 
-<<<<<<< HEAD
-DECLARE @idTipoCambio INT, @venta INT, @compra INT, @idMapeo INT, @var INT, @Monto INT, @IdCuenta INT,
-@nuevoSaldo INT, @IdMov2 INT;
->>>>>>> master
-=======
-DECLARE @idTipoCambio INT, @venta INT, @compra INT, @idMapeo INT, @var INT, @Monto INT, @IdCuenta INT,
-@nuevoSaldo INT, @IdMov2 INT, @cont INT;
->>>>>>> master
-
-
-SET @cont=1;
 --insercion usuarios
 
 
@@ -202,13 +189,13 @@ BEGIN
 		Fecha = T.item.value('../@Fecha', 'DATE')
 		
 	
-	FROM @datos.nodes('Datos/FechaOperacion/TipoCambioDolares') as T(Item)
-	WHERE T.item.value('../@Fecha', 'DATE') = @fechaInicial;
+	FROM @datos.nodes('//Datos/FechaOperacion/TipoCambioDolares') as T(Item)
+
 
 	SELECT * FROM dbo.TipoCambio
 
 	--insercion mov
-	INSERT INTO dbo.Movimientos(IdTipoCambio,Descripcion,IdCuenta,IdTipoMov,Monto,IdMoneda,Fecha,MontoMonedaOriginal)
+	INSERT INTO dbo.Movimientos(IdTipoCambio,Descripcion,IdCuenta,IdTipoMov,Monto,IdMoneda,Fecha,MontoMonedaOriginal,NumCuenta)
 		
 
 	SELECT  
@@ -220,121 +207,33 @@ BEGIN
 		Monto = T.Item.value('@Monto', 'int'),
 		IdMoneda = T.Item.value('@IdMoneda', 'int'),
 		Fecha = T.item.value('../@Fecha', 'DATE'),
-		MontoMonedaOriginal = T.Item.value('@Monto', 'int')
+		MontoMonedaOriginal = T.Item.value('@Monto', 'int'),
+		NumCuenta = T.Item.value('@NumeroCuenta', 'int')
 		
 		
 	FROM @datos.nodes('//Datos/FechaOperacion/Movimientos') as T(Item)
 
 	SELECT * FROM dbo.Movimientos
 
-<<<<<<< HEAD
+
 SET @fechaInicial = (SELECT(DATEADD(DAY,1,@fechaInicial)))
+	
+
 END;
-<<<<<<< HEAD
 	
 	
-	SELECT IdCuenta FROM CuentaAhorros WHERE IdCuenta = 
-	@IdCuenta =
-	SET @IdCA = (SELECT Id FROM CuentaAhorros WHERE Id = IdCuenta)
-	SELECT * FROM 
+
 	SET @IdTipoCA = (SELECT IdTipoCuenta FROM CuentaAhorros WHERE IdMovimiento = @IdMov)
 	SET @IdMonedaCuenta = (SELECT IdTipoMoneda FROM TipoCuentaAhorros WHERE Id = @IdTipoCA)
-	SET @IdTipoMov = SELECT Id FROM
+	
 	SET @Operacion = (SELECT Operacion FROM TipoMovimientos)
-=======
-
---referencia
-	SET @IdMov = (SELECT Id FROM CuentaAhorros WHERE NumCuenta=  T.Item.value('@NumeroCuenta', 'int'))
-=======
-
-
---referencia
+	@IdCuenta = (SELECT Id FROM CuentaAhorros WHERE NumCuenta = T.Item.value('@NumeroCuenta', 'int')) 
+	FROM @datos.nodes('//Datos/FechaOperacion/Movimientos') as T(Item)
 	
+	WHILE @cont
+		@IdCuenta = SELECT IdCuenta FROM Movimientos WHERE Id = @cont
 
-WHILE @cont<= 24
-	SET @IdMov = (SELECT Id FROM CuentaAhorros WHERE NumCuenta=  @cont)
->>>>>>> master
-	SET @IdCuenta= (SELECT IdCuenta From Movimientos WHERE   Id=@IdMov)
-
-
-	SET @IdTipoCA = (SELECT IdTipoCuenta FROM CuentaAhorros WHERE Id = @IdCuenta)
-
-	SET @IdMonedaCuenta = (SELECT IdTipoMoneda FROM TiposCuentaAhorros WHERE Id = @IdTipoCA)
-
-	SET @Operacion = (SELECT Operacion FROM TipoMov)
-
-	
-	SET @idTipoCambio= (SELECT idTipoCambio from Movimientos)
-
-
-	SET @Monto = (SELECT Monto FROM Movimientos)
-	SET @IdMon = (SELECT idMoneda FROM Movimientos)
-	SET @var= (SELECT Id from Movimientos WHERE @idTipoCambio = idTipoCambio)
-
-	IF @IdMonedaCuenta = @IdMon
-
-					
-		IF @Operacion = 1
-			
-			UPDATE Movimientos 
-			SET NuevoSaldo = NuevoSaldo +@Monto
-			WHERE @var=Id;
-
-		--referencia2
-		IF @Operacion = 2
-			
-			UPDATE Movimientos 
-			SET NuevoSaldo = NuevoSaldo - @Monto
-			WHERE @var=Id;
-			
-	IF (@IdMonedaCuenta = 1 AND @IdMon=2)
-		IF @Operacion = 1
-			
-			Set @idTipoCambio = (SELECT idTipoCambio FROM Movimientos WHERE @IdMov=id)
-			Set @compra = (SELECT TCVenta FROM TipoCambio WHERE @idTipoCambio=id)
-			UPDATE Movimientos 
-			SET NuevoSaldo = NuevoSaldo + (@Monto/@compra)
-			WHERE @var=Id;
-		
-		IF @Operacion = 2
-			
-			Set @idTipoCambio = (SELECT idTipoCambio FROM Movimientos WHERE @IdMov=id)
-			Set @compra = (SELECT TCVenta FROM TipoCambio WHERE @idTipoCambio=id)
-			UPDATE Movimientos 
-			SET NuevoSaldo = NuevoSaldo - (@Monto/@compra)
-			WHERE @var=Id;
-
-	IF (@IdMonedaCuenta = 2 AND @IdMon=1)
-		IF @Operacion = 1
-			
-			Set @idTipoCambio = (SELECT idTipoCambio FROM Movimientos WHERE @IdMov=id)
-			Set @venta = (SELECT TCVenta FROM TipoCambio WHERE @idTipoCambio=id)
-			UPDATE Movimientos 
-			SET NuevoSaldo = NuevoSaldo +( @Monto*@venta)
-			WHERE @var=Id;
-		
-		IF @Operacion = 2
-			
-			Set @idTipoCambio = (SELECT idTipoCambio FROM Movimientos WHERE @IdMov=id)
-			Set @venta = (SELECT TCVenta FROM TipoCambio WHERE @idTipoCambio=id)
-			UPDATE Movimientos 
-			SET NuevoSaldo = NuevoSaldo -  (@Monto*@venta)
-			WHERE @var=Id;
-
->>>>>>> master
-	
-	SET @IdMov2= (SELECT IdCuenta FROM Movimientos WHERE IdTipoCambio=@idTipoCambio);
-	SET @var = (SELECT Id FROM CuentaAhorros WHERE Id=@IdMov2 );
-
-	SET @nuevoSaldo = (SELECT NuevoSaldo FROM Movimientos WHERE Id=@IdMov2);
-
-	UPDATE CuentaAhorros
-	SET Saldo = @nuevoSaldo
-	WHERE @var=Id;
-
-
-<<<<<<< HEAD
-<<<<<<< HEAD
+		SELECT * FROM CuentaAhorros
 	IF @IdMonedaCuenta = 'moneda mov '
 		IF @Operacion = 1
 			
@@ -358,16 +257,7 @@ WHILE @cont<= 24
 			UPDATE Movimientos 
 			SET NuevoSaldo = NuevoSaldo - T.Item.value('@Monto', 'int')
 			
-=======
->>>>>>> master
-=======
-SET @cont=@cont+1;
-			
 
->>>>>>> master
-
-SET @fechaInicial = (SELECT(DATEADD(DAY,1,@fechaInicial)))
-END;
 
 	SELECT IdTipoCuenta FROM CuentaAhorros WHERE Id = 'variable de todas las ids'
 	SELECT Id FROM TipoCuentaAhorros WHERE Id = 'var d arribba'
